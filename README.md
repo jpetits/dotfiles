@@ -71,7 +71,7 @@ cd ~/dotfiles/tools && npm install
 cp ~/dotfiles/tools/.env.example ~/dotfiles/tools/.env
 # Edit .env and add: POSTMAN_API_KEY, NEON_API_KEY (personal key), CLERK_SECRET_KEY
 
-# Secrets — create ~/.secrets with your API keys (never committed):
-cat > ~/.secrets << 'EOF'
+# Secrets — create ~/dotfiles/.secrets with your API keys (gitignored, never committed):
+cat > ~/dotfiles/.secrets << 'EOF'
 export CONTEXT7_API_KEY=your-context7-api-key
 EOF
