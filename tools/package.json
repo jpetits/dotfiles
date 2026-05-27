@@ -1,0 +1,16 @@
+{
+  "name": "postman-agent",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "postman": "tsx src/cli.ts"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.54.0"
+  },
+  "devDependencies": {
+    "tsx": "^4.19.4",
+    "typescript": "^5.8.3",
+    "@types/node": "^22.15.21"
+  }
+}

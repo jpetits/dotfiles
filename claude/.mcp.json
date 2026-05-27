@@ -1,9 +1,5 @@
 {
   "mcpServers": {
-    "postman": {
-      "type": "http",
-      "url": "https://mcp.postman.com/mcp"
-    },
     "chrome-devtools": {
       "type": "stdio",
       "command": "npx",
