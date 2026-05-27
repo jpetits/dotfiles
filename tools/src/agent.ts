@@ -1,53 +1,18 @@
 import Anthropic from "@anthropic-ai/sdk";
-import { PostmanClient } from "./client.js";
-import { tools } from "./tools.js";
+import { createPostmanRegistry } from "./postman-service.js";
+import type { Registry } from "./types.js";
 import * as readline from "readline";
 
 const apiKey = process.env.POSTMAN_API_KEY;
 if (!apiKey) throw new Error("POSTMAN_API_KEY env var required");
 
 const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
-const postman = new PostmanClient(apiKey);
 
-type Input = Record<string, string | boolean | unknown[] | unknown>;
+const registry: Registry = {
+  ...createPostmanRegistry(apiKey),
+};
 
-async function handleTool(name: string, input: Input): Promise<unknown> {
-  switch (name) {
-    case "get_me": return postman.getMe();
-    case "get_workspaces": return postman.getWorkspaces();
-    case "get_workspace": return postman.getWorkspace(input.id as string);
-    case "create_workspace": return postman.createWorkspace({ workspace: input });
-    case "delete_workspace": return postman.deleteWorkspace(input.id as string);
-    case "get_collections": return postman.getCollections(input.workspaceId as string | undefined);
-    case "get_collection": return postman.getCollection(input.id as string);
-    case "create_collection": return postman.createCollection({ collection: { info: { name: input.name, description: input.description, schema: "https://schema.getpostman.com/json/collection/v2.1.0/collection.json" } } }, input.workspaceId as string | undefined);
-    case "patch_collection": return postman.patchCollection(input.id as string, { collection: { info: { name: input.name, description: input.description } } });
-    case "delete_collection": return postman.deleteCollection(input.id as string);
-    case "fork_collection": return postman.forkCollection(input.id as string, { label: input.label }, input.workspaceId as string);
-    case "get_collection_request": return postman.getCollectionRequest(input.collectionId as string, input.requestId as string);
-    case "create_collection_request": return postman.createCollectionRequest(input.collectionId as string, { name: input.name, method: input.method, url: input.url, description: input.description, header: input.headers, body: input.body }, input.folderId as string | undefined);
-    case "delete_collection_request": return postman.deleteCollectionRequest(input.collectionId as string, input.requestId as string);
-    case "create_collection_folder": return postman.createCollectionFolder(input.collectionId as string, { name: input.name, description: input.description });
-    case "delete_collection_folder": return postman.deleteCollectionFolder(input.collectionId as string, input.folderId as string);
-    case "get_environments": return postman.getEnvironments(input.workspaceId as string | undefined);
-    case "get_environment": return postman.getEnvironment(input.id as string);
-    case "create_environment": return postman.createEnvironment({ environment: { name: input.name, values: input.values ?? [] } }, input.workspaceId as string | undefined);
-    case "update_environment": return postman.updateEnvironment(input.id as string, { environment: { name: input.name, values: input.values } });
-    case "delete_environment": return postman.deleteEnvironment(input.id as string);
-    case "get_mocks": return postman.getMocks(input.workspaceId as string | undefined);
-    case "get_mock": return postman.getMock(input.id as string);
-    case "create_mock": return postman.createMock({ mock: { collection: { id: input.collectionId }, name: input.name, environment: input.environmentId ? { id: input.environmentId } : undefined } }, input.workspaceId as string | undefined);
-    case "delete_mock": return postman.deleteMock(input.id as string);
-    case "get_monitors": return postman.getMonitors(input.workspaceId as string | undefined);
-    case "get_monitor": return postman.getMonitor(input.id as string);
-    case "run_monitor": return postman.runMonitor(input.id as string);
-    case "delete_monitor": return postman.deleteMonitor(input.id as string);
-    case "get_apis": return postman.getApis(input.workspaceId as string | undefined);
-    case "get_api": return postman.getApi(input.id as string);
-    case "search": return postman.search(input.query as string);
-    default: throw new Error(`Unknown tool: ${name}`);
-  }
-}
+const tools = Object.values(registry).map((c) => c.tool);
 
 async function run(userMessage: string) {
   const messages: Anthropic.MessageParam[] = [{ role: "user", content: userMessage }];
@@ -69,8 +34,11 @@ async function run(userMessage: string) {
 
     const results = await Promise.all(
       toolUseBlocks.map(async (block) => {
+        const cmd = registry[block.name];
         try {
-          const result = await handleTool(block.name, block.input as Input);
+          const result = cmd
+            ? await cmd.run(block.input as Record<string, unknown>)
+            : (() => { throw new Error(`Unknown tool: ${block.name}`); })();
           return { type: "tool_result" as const, tool_use_id: block.id, content: JSON.stringify(result) };
         } catch (err) {
           return { type: "tool_result" as const, tool_use_id: block.id, content: `Error: ${err}`, is_error: true };

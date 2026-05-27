@@ -30,3 +30,44 @@ La clé API est dans `~/code/postman-agent/.env` — chargée automatiquement.
 | `get_monitors` / `get_monitor` / `run_monitor` / `delete_monitor` | `--id` |
 | `get_apis` / `get_api` | `--id` |
 | `search` | `--query` |
+
+## Neon
+
+Pour toute opération Neon (base de données Postgres), utilise le même CLI :
+
+```bash
+cd ~/dotfiles/tools && npx tsx src/cli.ts <commande> [--arg valeur]
+```
+
+La clé API est dans `~/dotfiles/tools/.env` sous `NEON_API_KEY`.
+
+| Commande | Args requis |
+|---|---|
+| `neon_get_me` | — |
+| `neon_get_projects` | — |
+| `neon_get_project` | `--id` |
+| `neon_get_branches` | `--projectId` |
+| `neon_get_branch` | `--projectId`, `--branchId` |
+| `neon_get_endpoints` | `--projectId` |
+| `neon_get_connection_uri` | `--projectId`, `--database` (opt, défaut: neondb), `--role` (opt), `--branchId` (opt) |
+| `neon_run_query` | `--projectId`, `--query`, `--database` (opt, défaut: neondb), `--branchId` (opt) |
+
+## Clerk
+
+Pour toute opération Clerk (auth/users), utilise le même CLI :
+
+```bash
+cd ~/dotfiles/tools && npx tsx src/cli.ts <commande> [--arg valeur]
+```
+
+La clé API est dans `~/dotfiles/tools/.env` sous `CLERK_SECRET_KEY`.
+
+| Commande | Args requis |
+|---|---|
+| `clerk_get_users` | `--limit` (opt), `--email_address` (opt), `--username` (opt) |
+| `clerk_get_user` | `--userId` |
+| `clerk_delete_user` | `--userId` |
+| `clerk_ban_user` / `clerk_unban_user` | `--userId` |
+| `clerk_get_user_sessions` | `--userId` |
+| `clerk_get_sessions` | `--limit` (opt), `--status` (opt) |
+| `clerk_revoke_session` | `--sessionId` |

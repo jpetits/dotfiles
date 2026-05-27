@@ -1,5 +1,8 @@
 @RTK.md
-@custom-tools.md
+
+## Custom CLI tools
+`cd ~/dotfiles/tools && npx tsx src/cli.ts <cmd>` — Postman, Neon, Clerk.
+Docs par outil: `~/dotfiles/claude/tools/{postman,neon,clerk}.md` — lire à la demande.
 
 <!-- CODEGRAPH_START -->
 ## CodeGraph
