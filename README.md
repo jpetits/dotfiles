@@ -71,6 +71,7 @@ cd ~/dotfiles/tools && npm install
 cp ~/dotfiles/tools/.env.example ~/dotfiles/tools/.env
 # Edit .env and add: POSTMAN_API_KEY, NEON_API_KEY (personal key), CLERK_SECRET_KEY
 
-# MCP secrets — edit .mcp.json after symlinking:
-# Replace YOUR_CONTEXT7_API_KEY with your real key from https://context7.com
-```
+# Secrets — create ~/.secrets with your API keys (never committed):
+cat > ~/.secrets << 'EOF'
+export CONTEXT7_API_KEY=your-context7-api-key
+EOF
