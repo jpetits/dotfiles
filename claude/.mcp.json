@@ -4,6 +4,18 @@
       "type": "stdio",
       "command": "npx",
       "args": ["chrome-devtools-mcp@latest", "--browser-url=http://127.0.0.1:9222"]
+    },
+    "codegraph": {
+      "type": "stdio",
+      "command": "codegraph",
+      "args": ["serve", "--mcp"]
+    },
+    "context7": {
+      "type": "http",
+      "url": "https://mcp.context7.com/mcp",
+      "headers": {
+        "CONTEXT7_API_KEY": "YOUR_CONTEXT7_API_KEY"
+      }
     }
   }
 }

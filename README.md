@@ -11,7 +11,7 @@ dotfiles/
 ├── claude/
 │   ├── CLAUDE.md           # Global Claude Code instructions
 │   ├── RTK.md              # RTK (token optimizer) instructions
-│   ├── .mcp.json           # MCP servers (Chrome DevTools, CodeGraph, etc.)
+│   ├── .mcp.json           # MCP servers (Chrome DevTools, CodeGraph, Context7)
 │   ├── settings.json       # Claude Code settings, permissions, hooks
 │   ├── statusline-command.sh
 │   ├── rules/
@@ -70,4 +70,7 @@ ln -sf ~/dotfiles/claude/rules/context7.md ~/.claude/rules/context7.md
 cd ~/dotfiles/tools && npm install
 cp ~/dotfiles/tools/.env.example ~/dotfiles/tools/.env
 # Edit .env and add: POSTMAN_API_KEY, NEON_API_KEY (personal key), CLERK_SECRET_KEY
+
+# MCP secrets — edit .mcp.json after symlinking:
+# Replace YOUR_CONTEXT7_API_KEY with your real key from https://context7.com
 ```
