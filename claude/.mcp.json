@@ -13,7 +13,7 @@
     "context7": {
       "type": "http",
       "url": "https://mcp.context7.com/mcp",
-      "envFile": "~/dotfiles/.secrets",
+      "envFile": "../.secrets",
       "headers": {
         "CONTEXT7_API_KEY": "${CONTEXT7_API_KEY}"
       }
